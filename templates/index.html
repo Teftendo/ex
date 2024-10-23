@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Стриминг</title>
+    <style>
+        #log-container {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f1f1f1;
+            height: 200px;
+            overflow-y: auto;
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+    <h1>Видеопоток дрона</h1>
+    <img src="{{ url_for('video_feed') }}" width="640" height="480">
+    
+    <h2>Лог</h2>
+    <div id="log-container">
+        <div id="logs" style="height: 300px; overflow-y: auto; background-color: #e6e6e6; border: 1px solid #000000;"></div>
+    </div>
+    <script>
+    
+    const logContainer = document.getElementById('logs');
+    const eventSource = new EventSource('/logs_stream');
+
+    eventSource.onmessage = function(event) {
+        const newLog = document.createElement('p');
+        newLog.textContent = event.data;
+        logContainer.appendChild(newLog);
+
+        logContainer.scrollTop = logContainer.scrollHeight;
+    };
+</script>
+</body>
+</html>
